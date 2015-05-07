@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="QrCode:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/QrCode_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="QrCode/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="QrCode" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Hibernate 4.2.2-4.2.2" />
+          <element id="file-copy" path="$APPLICATION_CONFIG_DIR$/jdbc-drivers/mysql-connector-java-5.1.35-bin.jar" />
+          <element id="file-copy" path="$APPLICATION_CONFIG_DIR$/jdbc-drivers/mysql-connector-license.txt" />
+          <element id="library" level="project" name="com.google.zxing:zxingorg:3.2.0" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

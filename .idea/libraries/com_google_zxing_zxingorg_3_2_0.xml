@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="com.google.zxing:zxingorg:3.2.0" type="repository">
+    <properties maven-id="com.google.zxing:zxingorg:3.2.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/core-3.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javase-3.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javaee-web-api-7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guava-18.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/zxingorg-3.2.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
