@@ -24,7 +24,7 @@ public class DocsBean extends HibernateBase {
         List<Long> list = query.list();
         current_qrs = list.iterator().next();
         transaction.commit();
-        closeSession();
+        //closeSession();
     }
 
     public DocsBean () throws HibernateException{

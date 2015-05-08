@@ -83,6 +83,6 @@ public class FbServlet extends HttpServlet {
                 }
             }
         }
-        db.closeSession();
+        //db.closeSession();
     }
 }

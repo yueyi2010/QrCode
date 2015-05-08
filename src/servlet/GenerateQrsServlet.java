@@ -74,7 +74,7 @@ public class GenerateQrsServlet extends javax.servlet.http.HttpServlet {
             success = false;
             transaction.rollback();
         }
-        db.closeSession();
+        //db.closeSession();
 
         if (!success){
             pw.println("Transaction commit failed, may another job is generating qrcodes. Try later! ");

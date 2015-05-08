@@ -67,6 +67,6 @@ public class QrServlet extends javax.servlet.http.HttpServlet {
             transaction.rollback();
         }
         pw.print(ret);
-        db.closeSession();
+        //db.closeSession();
     }
 }

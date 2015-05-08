@@ -1,14 +1,12 @@
 package servlet;
 
+import hibernate.DocsBean;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Iterator;
-
-import hibernate.HibernateBase;
-import org.hibernate.Session;
-import hibernate.DocsBean;
-import org.hibernate.Transaction;
 
 /**
  * Created by chenpeng07 on 2015/4/30.
@@ -30,6 +28,6 @@ public class IdsServlet extends javax.servlet.http.HttpServlet {
         for (String i : list){
             pw.println(i);
         }
-        db.closeSession();
+        //db.closeSession();
     }
 }
