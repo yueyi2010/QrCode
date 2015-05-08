@@ -29,6 +29,7 @@ public abstract class HibernateBase {
     public static Session currentSession() throws HibernateException {
         Session s = (Session)session.get();
         if (s == null || !s.isOpen() || !s.isConnected()) {
+            session.set(null);
             if (s != null && s.isOpen()) {
                 s.close();
             }
@@ -41,9 +42,9 @@ public abstract class HibernateBase {
 
     public static void closeSession() throws HibernateException {
         Session s = (Session)session.get();
+        session.set(null);
         if (s != null && s.isOpen()) {
             s.close();
         }
-        session.set(null);
     }
 }

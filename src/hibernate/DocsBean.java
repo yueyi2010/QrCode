@@ -21,9 +21,9 @@ public class DocsBean extends HibernateBase {
         Transaction transaction = s.beginTransaction();
         String queryString = "select count(*) from QrsEntity";
         Query query = s.createQuery(queryString);
-        List<Long> list = query.list();
-        current_qrs = list.iterator().next();
+        current_qrs = (Long) query.uniqueResult();
         transaction.commit();
+        System.out.println("current_qrs:" + current_qrs);
         //closeSession();
     }
 
