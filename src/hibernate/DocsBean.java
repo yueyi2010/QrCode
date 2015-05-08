@@ -1,9 +1,6 @@
 package hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -70,7 +67,7 @@ public class DocsBean extends HibernateBase {
             return 3;
         }
 
-        String queryString = "select count(*) from QrsEntity where qr = '" + qr + "'";
+        String queryString = "select count(*) from QrsEntity qrs where qr = '" + qr + "'";
         Query query = s.createQuery(queryString);
         long found = (Long) query.uniqueResult();
 
@@ -79,9 +76,14 @@ public class DocsBean extends HibernateBase {
             return 0;
         }
 
-        String queryString2 = "select count(*) as num from DocsEntity where qr = '" + qr + "'";
+        String queryString2 = "from DocsEntity as docs where docs.qr = '" + qr + "'";
         Query query2 = s.createQuery(queryString2);
-        long used_num2 = (Long) query2.uniqueResult();
+        query2.setLockMode("docs", LockMode.PESSIMISTIC_WRITE);
+        long used_num2 = query2.list().size();
+
+        /*String queryString2 = "select count(*) as num from docs where qr = '" + qr + "'";
+        Query query2 = s.createSQLQuery(queryString2).addScalar("num", LongType.INSTANCE);
+        long used_num2 = (Long)query2.uniqueResult();*/
 
         System.out.println("ok");
 
