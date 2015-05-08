@@ -61,6 +61,7 @@ public class FbServlet extends HttpServlet {
                 transaction.commit();
             }
             catch (Throwable t){
+                t.printStackTrace();
                 success = false;
                 transaction.rollback();
             }
@@ -72,6 +73,7 @@ public class FbServlet extends HttpServlet {
                 transaction.commit();
             }
             catch (Throwable t){
+                t.printStackTrace();
                 success = false;
                 transaction.rollback();
             }

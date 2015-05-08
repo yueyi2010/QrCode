@@ -1,7 +1,6 @@
 package servlet;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -71,12 +70,14 @@ public class GenerateQrsServlet extends javax.servlet.http.HttpServlet {
             transaction.commit();
         }
         catch(Throwable t){
+            t.printStackTrace();
             success = false;
             transaction.rollback();
         }
         db.closeSession();
 
         if (!success){
+            pw.println("Transaction commit failed, may another job is generating qrcodes. Try later! ");
             return;
         }
 

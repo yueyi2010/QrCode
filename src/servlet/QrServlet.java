@@ -6,7 +6,6 @@ import org.hibernate.Transaction;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 /**
  * Created by chenpeng07 on 2015/4/30.
@@ -40,18 +39,17 @@ public class QrServlet extends javax.servlet.http.HttpServlet {
             withQr = false;
         }
 
-        if (withQr && (qr.isEmpty() || null == allow || allow.isEmpty())) {
-            pw.println("Qr is empty, or allow is null or empty");
+        if (withQr && qr.isEmpty()) {
+            pw.println("Qr is empty");
             return;
         }
 
-        int allowInt = 0;
-        if (withQr) {
+        int allowInt = 5;
+        if (withQr && null != allow && !allow.isEmpty()) {
             try {
                 allowInt = Integer.parseInt(allow);
             } catch (Throwable t) {
-                pw.println("Allow is not an integer");
-                return;
+                t.printStackTrace();
             }
         }
 
@@ -64,6 +62,7 @@ public class QrServlet extends javax.servlet.http.HttpServlet {
             transaction.commit();
         }
         catch (Throwable t){
+            t.printStackTrace();
             ret = withQr ? 0 : 1;
             transaction.rollback();
         }

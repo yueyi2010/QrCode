@@ -1,20 +1,40 @@
 package hibernate;
 
-import org.hibernate.*;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import hibernate.DocsEntity;
-
 /**
  * Created by chenpeng07 on 2015/5/4.
  */
 public class DocsBean extends HibernateBase {
+    private static long current_qrs = 0;
+
+    static {
+        Session s = currentSession();
+        Transaction transaction = s.beginTransaction();
+        String queryString = "select count(*) from QrsEntity";
+        Query query = s.createQuery(queryString);
+        List<Long> list = query.list();
+        current_qrs = list.iterator().next();
+        transaction.commit();
+        closeSession();
+    }
+
     public DocsBean () throws HibernateException{
         super();
+    }
+
+    private static synchronized long getAndModifyCurrentQrs(int num) {
+        long old = current_qrs;
+        current_qrs += num;
+        return old;
     }
 
     /**
@@ -50,16 +70,22 @@ public class DocsBean extends HibernateBase {
             return 3;
         }
 
-        String queryString = "select id from QrsEntity where qr = '" + qr +"'";
-        if (s.createQuery(queryString).list().isEmpty()){
+        String queryString = "select count(*) from QrsEntity where qr = '" + qr + "'";
+        Query query = s.createQuery(queryString);
+        long found = (Long) query.uniqueResult();
+
+        if (0 == found) {
             //激活码无效，失败
             return 0;
         }
 
-        String queryString2 = "select id from DocsEntity where qr = '" + qr +"'";
-        List list = s.createQuery(queryString2).list();
+        String queryString2 = "select count(*) as num from DocsEntity where qr = '" + qr + "'";
+        Query query2 = s.createQuery(queryString2);
+        long used_num2 = (Long) query2.uniqueResult();
 
-        if (list.size() >= allow){
+        System.out.println("ok");
+
+        if (used_num2 >= allow) {
             //激活次数达到上限
             return 1;
         }
@@ -101,8 +127,8 @@ public class DocsBean extends HibernateBase {
     public Vector<String> generateQrs(Session s,int num)throws HibernateException
     {
         Vector<String> vector = new Vector<String>(num);
-        String queryString = "select qr from QrsEntity";
-        int sigh1 = s.createQuery(queryString).list().size();
+        long sigh1 = getAndModifyCurrentQrs(num);
+        System.out.println(sigh1);
         long sigh2 = 0;
         long sigh = 0;
 
