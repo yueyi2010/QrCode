@@ -49,40 +49,35 @@ public class FbServlet extends HttpServlet {
             return;
         }
 
-        //没有指定fb时，获取用户反馈;否则记录反馈
         Session s = db.currentSession();
-        Transaction transaction = s.beginTransaction();
+        Transaction tx = null;
+        try {
+            tx = s.beginTransaction();
+            List<String> list = null;
 
-        boolean success = true;
-        if (withFb){
-            db.setFb(s, id, fb);
-
-            try{
-                transaction.commit();
+            //没有指定fb时，获取用户反馈;否则记录反馈
+            if (withFb) {
+                db.setFb(s, id, fb);
+            } else {
+                list = db.getFb(s, id);
             }
-            catch (Throwable t){
-                t.printStackTrace();
-                success = false;
-                transaction.rollback();
-            }
-            pw.println(success ? "true" : "false");
-        }
-        else{
-            List<String> list = db.getFb(s, id);
-            try{
-                transaction.commit();
-            }
-            catch (Throwable t){
-                t.printStackTrace();
-                success = false;
-                transaction.rollback();
-            }
-            if (success){
+            tx.commit();
+            if (withFb) {
+                pw.println("true");
+            } else {
                 for (String i : list){
                     pw.println(i);
                 }
             }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            if (withFb) {
+                pw.println("false");
+            }
+            return;
+        } finally {
+            db.closeSession();
         }
-        //db.closeSession();
     }
 }

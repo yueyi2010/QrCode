@@ -22,7 +22,7 @@ public class QrServlet extends javax.servlet.http.HttpServlet {
         PrintWriter pw = response.getWriter();
         String id = request.getParameter("id");
         String qr = request.getParameter("qr");
-        String allow = request.getParameter("allow");
+
         boolean withQr = true;
 
         if (null == id){
@@ -44,29 +44,21 @@ public class QrServlet extends javax.servlet.http.HttpServlet {
             return;
         }
 
-        int allowInt = 5;
-        if (withQr && null != allow && !allow.isEmpty()) {
-            try {
-                allowInt = Integer.parseInt(allow);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-
         //没有指定qr时，判断该id是否激活;否则使用id和qr尝试激活
         Session s = db.currentSession();
-        Transaction transaction = s.beginTransaction();
-        int ret = withQr ? db.idQrActive(s, id, qr, allowInt) : db.isIdActive(s, id);
-
+        Transaction tx = null;
         try {
-            transaction.commit();
+            tx = s.beginTransaction();
+            int ret = withQr ? db.idQrActive(s, id, qr) : db.isIdActive(s, id);
+            tx.commit();
+            pw.println(ret);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            pw.println(withQr ? 0 : 1);
+            return;
+        } finally {
+            db.closeSession();
         }
-        catch (Throwable t){
-            t.printStackTrace();
-            ret = withQr ? 0 : 1;
-            transaction.rollback();
-        }
-        pw.print(ret);
-        //db.closeSession();
     }
 }

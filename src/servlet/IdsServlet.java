@@ -22,12 +22,20 @@ public class IdsServlet extends javax.servlet.http.HttpServlet {
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         PrintWriter pw = response.getWriter();
         Session s = db.currentSession();
-        Transaction transaction = s.beginTransaction();
-        List<String> list = db.getAllIds(s);
-        transaction.commit();
-        for (String i : list){
-            pw.println(i);
+        Transaction tx = null;
+        try {
+            tx = s.beginTransaction();
+            List<String> list = db.getAllIds(s);
+            tx.commit();
+            for (String i : list) {
+                pw.println(i);
+            }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return;
+        } finally {
+            db.closeSession();
         }
-        //db.closeSession();
     }
 }

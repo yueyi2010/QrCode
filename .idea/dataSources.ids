@@ -23,6 +23,7 @@
     </table>
     <table name="qrs" schema="" catalog="qrcode" type="TABLE">
       <column name="qr" sqlType="CHAR" precision="16" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <column name="allow" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="qr"/>
       <index name="unique_qr" unique="true" columns="qr"/>
     </table>

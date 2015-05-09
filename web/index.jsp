@@ -22,7 +22,17 @@
         生成个数(num): <input type="text" name="num"/>
     </p>
     <p>
-        生成路径(path): <input type="text" name="path"/>
+        激活次数(allow): <input type="text" name="allow" value="5"/>
+    </p>
+    <!--
+    <p>
+        二维码/激活码(type):
+        <input type="radio" name="type" value="0" checked="checked"/>二维码(0)
+        <input type="radio" name="type" value="1" />激活码(1)
+    </p>
+    -->
+    <p>
+        二维码生成路径(path): <input type="text" name="path"/>
     </p>
     <input type="submit" value="提交"/>
 </form>
@@ -31,7 +41,6 @@
         2.主动激活接口
     </strong>
 </p>
-
 <form action="qr" method="get">
     <p>
         用户(id): <input type="text" name="id"/>
@@ -39,10 +48,6 @@
 
     <p>
         二维码(qr): <input type="text" name="qr"/>
-    </p>
-
-    <p>
-        最大激活次数(allow): <input type="text" name="allow" value="5"/>
     </p>
     <input type="submit" value="提交"/>
 </form>

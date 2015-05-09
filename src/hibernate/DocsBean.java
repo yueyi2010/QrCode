@@ -60,21 +60,23 @@ public class DocsBean extends HibernateBase {
     /**
      * 根据用户ID和二维码激活用户。
      */
-    public int idQrActive(Session s, String id, String qr, int allow)throws HibernateException
+    public int idQrActive(Session s, String id, String qr) throws HibernateException
     {
         if (0 == isIdActive(s, id)){
             //该用户已经激活
             return 3;
         }
 
-        String queryString = "select count(*) from QrsEntity qrs where qr = '" + qr + "'";
+        String queryString = "select allow from QrsEntity qrs where qr = '" + qr + "'";
         Query query = s.createQuery(queryString);
-        long found = (Long) query.uniqueResult();
+        List<Integer> list = query.list();
 
-        if (0 == found) {
+        if (0 == list.size()) {
             //激活码无效，失败
             return 0;
         }
+
+        int allow = list.iterator().next();
 
         String queryString2 = "from DocsEntity as docs where docs.qr = '" + qr + "'";
         Query query2 = s.createQuery(queryString2);
@@ -126,7 +128,7 @@ public class DocsBean extends HibernateBase {
     /**
      * 批量生成二维码。
      */
-    public Vector<String> generateQrs(Session s,int num)throws HibernateException
+    public Vector<String> generateQrs(Session s, int num, int allow) throws HibernateException
     {
         Vector<String> vector = new Vector<String>(num);
         long sigh1 = getAndModifyCurrentQrs(num);
@@ -145,6 +147,7 @@ public class DocsBean extends HibernateBase {
             sigh |= sigh2;
             String string = String.format("%016X", sigh);
             qrsEntity.setQr(string);
+            qrsEntity.setAllow(allow);
             s.save(qrsEntity);
             vector.add(string);
         }
